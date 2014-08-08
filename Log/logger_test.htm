@@ -1,0 +1,21 @@
+<!-- @author Anderson Mao, 2014-08-08 -->
+<html>
+<head>
+	<script type="text/javascript" src="logger.js"></script>
+</head>
+<body>
+	<p>Test for JavaScript logger</p>
+	<input type='button' onclick='javascript:run()' value='Click to run'/>
+</body>
+<script type="text/javascript">
+	function run(){
+		logger.debug("My Debug Msg");
+		logger.info("My Info Msg", "My Block");
+		logger.error("My Error Msg");
+		logger.logLevel = logger.LOG_LEVEL_DEBUG;
+		logger.debug("My Debug Msg after set debug level");
+		var obj = {name:'abc', address:{street:'street', city:'city'}, func: function(){logger.debug('Msg');} };
+		logger.info("My Object: "+logger.toString(obj) );
+		logger.info("My Object (All): "+logger.toString(obj, true) );
+	}
+</script>
