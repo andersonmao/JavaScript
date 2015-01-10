@@ -1,5 +1,6 @@
 # JavaScript
-JavaScript programs
+JavaScript programs.
+@author Anderson Mao
 
 ## Log
 JavaScript simple logger similar to Java Log4J with log level support
