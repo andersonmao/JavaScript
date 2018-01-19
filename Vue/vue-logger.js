@@ -56,6 +56,65 @@ var logger = {
 	},
 	
 	/**
+	 * to string with recursive option. default is not recursive
+	 */
+	toStringRecursive : function(content, recursive){
+		if(!content){
+			return content;
+		}
+		var sa = [];
+		if((typeof content) == "object" ){
+			if(content.length){// array
+				sa.push("[");
+				for(var i=0;i<content.length;i++){
+					var obj = content[i];
+					if(!obj){
+						continue;
+					}
+					if(i>0){
+						sa.push(",");
+					}
+					if((typeof obj) == "object" ){
+						sa.push("{");
+						for(var k in obj){
+							var v = obj[k];
+							if(recursive && v && (typeof v) == "object"){
+								v = this.toStringRecursive(v,recursive);
+							}else if(v && (typeof v) == "object"){
+								v = "object";
+							}else if((typeof v) == "function" ){
+								v = "function";
+							}
+							sa.push(k+":"+v+",");
+						}
+						sa.push("}");
+					}else{
+						sa.push(obj);
+					}
+				}
+				sa.push("]");
+			}else{// map
+				sa.push("{");
+				for(var k in content){
+					var v = content[k];
+					if(recursive && v && (typeof v) == "object"){
+						v = this.toStringRecursive(v,recursive);
+					}else if(v && (typeof v) == "object"){
+						v = "object";
+					}else if((typeof v) == "function" ){
+						v = "function";
+					}
+					sa.push(k+":"+v+",");
+				}
+				sa.push("}");
+			}
+		}else{// string
+			sa.push(content);
+		}
+		return sa.join("");
+	},
+	
+	/**
 	 * @return JSON字符串
 	 */
 	toString: function(obj){
@@ -71,8 +130,15 @@ var logger = {
 	 */
 	_getVueCompTip: function($vue, tip){
 		var myTip = tip || "";
+		var compTag = "";
 		if($vue.$options && $vue.$options._componentTag){
-			var compTag = $vue.$options._componentTag;
+			// no vue-router
+			compTag = $vue.$options._componentTag;
+		}else if($vue.$route && $vue.$route.path){
+			// vue-router
+			compTag = $vue.$route.path;
+		}
+		if(compTag){
 			if(myTip && compTag){
 				myTip = compTag + ": "+myTip;
 			}else if(compTag){
