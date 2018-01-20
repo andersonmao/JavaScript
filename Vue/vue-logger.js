@@ -134,9 +134,15 @@ var logger = {
 		if($vue.$options && $vue.$options._componentTag){
 			// no vue-router
 			compTag = $vue.$options._componentTag;
-		}else if($vue.$route && $vue.$route.path){
+		}else if($vue.$route){
 			// vue-router
-			compTag = $vue.$route.path;
+			if($vue.$route.meta && $vue.$route.meta.tag){
+				// Define vue-router meta tag like: {path: '/myComp', component: MyComp, meta:{tag: 'my-comp'}  },
+				compTag = $vue.$route.meta.tag;
+			}else if($vue.$route.path){
+				// Use path if no meta.tag defined
+				compTag = "path("+$vue.$route.path+")";
+			}
 		}
 		if(compTag){
 			if(myTip && compTag){
